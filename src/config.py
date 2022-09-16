@@ -1,5 +1,6 @@
-from configparser import ConfigParser
 import os
+from configparser import ConfigParser
+
 from dotenv import load_dotenv
 
 from src.utils.toolbox import get_path
@@ -9,10 +10,10 @@ load_dotenv()
 
 class Config:
     def __init__(self) -> None:
-        self.prefix = 'env:'
-        self.extension = '.conf'
+        self.prefix = "env:"
+        self.extension = ".conf"
         self.config = None
-        self.path = get_path(__file__, '../config')
+        self.path = get_path(__file__, "../config")
 
     def load(self) -> None:
         if self.config is None:
