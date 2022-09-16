@@ -16,11 +16,14 @@ class LinkedInScrapper:
     _url = "https://www.linkedin.com/"
 
     # Public:
-    def __init__(self, proxy=None):
+    def __init__(self, headless: bool = True, proxy=None):
         if proxy:
             raise NotImplementedError("Proxy is not implemented yet")
         self._logger = logging.getLogger(__name__)
-        self._driver = webdriver.Firefox()
+        options = webdriver.FirefoxOptions()
+        if headless:
+            options.add_argument("--headless")
+        self._driver = webdriver.Firefox(options=options)
 
     def login(self, username: str, password: str) -> bool:
         try:
@@ -47,5 +50,12 @@ class LinkedInScrapper:
     def close_driver(self) -> None:
         self._driver.close()
 
-    def get_profile(self, username):
-        raise NotImplementedError
+    def get_profile(self, username: str):
+        self.get_basic_info(username)
+        self.get_experience(username)
+
+    def get_basic_info(self, username: str) -> dict:
+        pass
+
+    def get_experience(self, username: str) -> dict:
+        pass
