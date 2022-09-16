@@ -1,7 +1,7 @@
 from src.config import config
 from src.linkedin_scrapper import LinkedInScrapper
 
-TEST_USERNAME = "dolores-fuertes-fernández-408743250"
+TEST_USERNAME = "NAREK"
 
 scrapper = LinkedInScrapper(headless=True)
 

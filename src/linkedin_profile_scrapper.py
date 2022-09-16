@@ -19,13 +19,16 @@ class LinkedInProfileScrapper:
         return self.__sections
 
     @property
-    def experience(self) -> list | None:
+    def experience(self) -> list[dict]:
         if not hasattr(self, "__experience") or self.__experience is None:
-            self.__experience = self.get_experience()
+            try:
+                self.__experience = self.get_experience()
+            except NotFoundProfileExperience:
+                return []
         return self.__experience
 
     @property
-    def basic_info(self) -> list | None:
+    def basic_info(self) -> dict:
         if not hasattr(self, "__basic_info") or self.__basic_info is None:
             self.__basic_info = self.get_basic_info()
         return self.__basic_info
@@ -45,7 +48,7 @@ class LinkedInProfileScrapper:
             "experience": self.experience,
         }
 
-    def get_basic_info(self) -> list[str | None]:
+    def get_basic_info(self) -> dict:
         username = self.__username
         self._driver.get(f"https://www.linkedin.com/in/{username}/")
 
@@ -63,19 +66,19 @@ class LinkedInProfileScrapper:
         # nbr_followers = self.__get_element_text(By.CSS_SELECTOR, "li.text-body-small:nth-child(1) > span:nth-child(1)", **{"target": "number of followers"})
         # nbr_connections = self.__get_element_text(By.CSS_SELECTOR, "li.text-body-small:nth-child(2) > span:nth-child(1) > span:nth-child(1)", **{"target": "number of connection"})
 
-        return [
-            name,
-            position,
-            location
+        return {
+            "name": name,
+            "position": position,
+            "location": location
             # nbr_followers,
             # nbr_connections
-        ]
+        }
 
-    def get_experience(self) -> dict:
+    def get_experience(self) -> list[dict]:
         sections = self._sections
-        experience_section_candidates = list(
-            filter(lambda section: "Experience" in section.text, sections)
-        )
+        experience_section_candidates = [
+            section for section in sections if "Experience" in section.text
+        ]
         if not experience_section_candidates:
             raise NotFoundProfileExperience(
                 f"Profile '{self.__username}' does not have any experience section"
@@ -85,7 +88,21 @@ class LinkedInProfileScrapper:
                 f"Profile '{self.__username}' has more than one experience section candidates, taking the first."
             )
         experience_section = experience_section_candidates[0]
-        return experience_section
+        experience_elements = experience_section.find_elements(By.TAG_NAME, "li")
+        experiences = []
+        for i, experience_element in enumerate(experience_elements):
+            position = experience_element.find_element(
+                By.XPATH, f"//li[{i+1}]/div/div[2]/div[1]/div[1]/div/span/span[1]"
+            ).text
+            time = experience_element.find_element(
+                By.XPATH, f"//li[{i+1}]/div/div[2]/div[1]/div[1]/span[2]/span[1]"
+            ).text.split("\n")[0]
+            location = experience_element.find_element(
+                By.XPATH, f"li[{i+1}]/div/div[2]/div[1]/div[1]/span[3]/span[1]"
+            ).text.split("\n")[0]
+            experience = {"position": position, "time": time, "location": location}
+            experiences.append(experience)
+        return experiences
 
     # Private:
     def _driver_get_user_profile(self) -> None:
