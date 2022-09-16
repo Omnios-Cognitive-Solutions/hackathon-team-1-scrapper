@@ -1,7 +1,6 @@
 import logging
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
@@ -44,35 +43,3 @@ class LinkedInScrapper:
     def get_profile(self, username: str):
         basic_data = self.get_basic_info(username)
         return basic_data
-
-    def __get_element_text(self, *args, **kwargs) -> str:
-        try:
-            return self._driver.find_element(args[0], args[1]).text
-        except NoSuchElementException:
-            self._logger.warning(f"Element {kwargs['target']} not found")
-            return None
-
-    def get_basic_info(self, username: str) -> list[str]:
-        self._driver.get(f"https://www.linkedin.com/in/{username}/")
-
-        name = self.__get_element_text(
-            By.CSS_SELECTOR, ".text-heading-xlarge", **{"target": "name"}
-        )
-        position = self.__get_element_text(
-            By.CSS_SELECTOR, ".text-body-medium", **{"target": "position"}
-        )
-        location = self.__get_element_text(
-            By.CSS_SELECTOR,
-            "span.text-body-small:nth-child(1)",
-            **{"target": "location"},
-        )
-        # nbr_followers = self.__get_element_text(By.CSS_SELECTOR, "li.text-body-small:nth-child(1) > span:nth-child(1)", **{"target": "number of followers"})
-        # nbr_connections = self.__get_element_text(By.CSS_SELECTOR, "li.text-body-small:nth-child(2) > span:nth-child(1) > span:nth-child(1)", **{"target": "number of connection"})
-
-        return [
-            name,
-            position,
-            location
-            # nbr_followers,
-            # nbr_connections
-        ]
