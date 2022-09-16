@@ -26,9 +26,7 @@ class LinkedInScrapper:
         try:
             self._driver.get("https://www.linkedin.com/")
 
-            elem = self._driver.find_element(
-                By.XPATH, "/html/body/nav/div/a[2]"
-            )  # nopep8
+            elem = self._driver.find_element(By.XPATH, "/html/body/nav/div/a[2]")
             elem.click()
 
             elem = self._driver.find_element(By.ID, "username")
@@ -37,7 +35,7 @@ class LinkedInScrapper:
             elem.send_keys(password)
             elem = self._driver.find_element(
                 By.XPATH, "/html/body/div/main/div[3]/div[1]/form/div[3]/button"
-            )  # nopep8
+            )
             elem.click()
 
         except Exception as e:
