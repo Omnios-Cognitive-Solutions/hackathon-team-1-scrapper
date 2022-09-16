@@ -15,7 +15,7 @@
             "module": "pytest",
             "args": [
                 "-sv",
-                "tests/test_scrapper.py"
+                "tests/test_linkedin_scrapper.py"
             ],
             "cwd": "${workspaceRoot}",
             "envFile": "${workspaceRoot}/.env"

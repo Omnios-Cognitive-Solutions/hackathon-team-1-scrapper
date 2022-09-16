@@ -1,26 +1,28 @@
 import logging
 
+from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.common.keys import Keys
 
-from .utils.files_management_toolbox import get_extension
-from .utils.selenium_toolbox import BaseSeleniumCrawler
-from .utils.string_toolbox import convert_to_kebab_case
-from .utils.vartypes_toolbox import check_type
+# from .utils.files_management_toolbox import get_extension
+# from .utils.selenium_toolbox import BaseSeleniumCrawler
+# from .utils.string_toolbox import convert_to_kebab_case
+# from .utils.vartypes_toolbox import check_type
 
 
-class LinkedInScrapper(BaseSeleniumCrawler):
+class LinkedInScrapper():
 
     _url = "https://www.linkedin.com/"
 
     # Public:
-    def __init__(self, *args, **kwargs):
-        url = self._url
-        super().__init__(url, *args, **kwargs)
+    def __init__(self):
         self._logger = logging.getLogger(__name__)
+        self._driver = webdriver.Firefox()
 
     def login(self, username: str, password: str) -> bool:
         try:
+            self._driver.get("https://www.linkedin.com/")
+
             elem = self._driver.find_element(By.XPATH, "/html/body/nav/div/a[2]")  # nopep8
             elem.click()
 
@@ -37,5 +39,8 @@ class LinkedInScrapper(BaseSeleniumCrawler):
 
         return True
 
+    def close_driver(self) -> None:
+        self._driver.close()
+
     def get_profile(self, username):
-        pass
+        raise NotImplementedError
