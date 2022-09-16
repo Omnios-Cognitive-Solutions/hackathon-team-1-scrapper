@@ -1,12 +1,14 @@
 from src.linkedin_scrapper import LinkedInScrapper
 
-# USERNAME = "hack2@omnios.ai"
-# PASSWORD = "
+TEST_USERNAME = "NAREK"
+
+scrapper = LinkedInScrapper()
 
 
 def test_login():
-    LinkedInScrapper().login()
+    scrapper.login()
 
 
-def test_get_profile():
-    LinkedInScrapper().get_profile()
+def test_get_profile_basic_data():
+    data = scrapper.get_profile(TEST_USERNAME)
+    assert data
