@@ -14,11 +14,12 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from src.utils.files_management_toolbox import (
-    append_suffix_to_filename,
+    add_suffix_to_filename,
     clear_directory,
     create_directory,
 )
-from src.utils.string_toolbox import convert_to_kebab_case, get_class_name
+
+from .string_toolbox import convert_to_kebab_case, get_class_name
 
 
 class Browser(Enum):
@@ -300,7 +301,7 @@ class BaseSeleniumCrawler:
     def _get_new_filename(self, old_filepath):
         old_filename = os.path.basename(old_filepath)
         timestamp = self._get_timestamp()
-        new_filename = append_suffix_to_filename(
+        new_filename = add_suffix_to_filename(
             convert_to_kebab_case(old_filename), f"_{timestamp}"
         )
         return new_filename

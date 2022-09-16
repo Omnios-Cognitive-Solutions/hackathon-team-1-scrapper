@@ -13,16 +13,26 @@ def complete_relative_path(relpath: str):
 
 
 def clear_directory(path: str):
+    remove_directory(path, ignore_errors=True)
+    create_directory(path, ignore_errors=True)
+
+
+def create_directory(path: str, ignore_errors: bool = False):
     try:
-        cmd1 = f"rm -r {path} > /dev/null 2>&1"
-        os.system(cmd1)
-    except:
-        pass
+        cmd = f"mkdir {path}"
+        os.system(cmd)
+    except Exception as e:
+        if not ignore_errors:
+            raise e
+
+
+def remove_directory(path: str, ignore_errors: bool = False):
     try:
-        cmd2 = f"mkdir {path} > /dev/null 2>&1"
-        os.system(cmd2)
-    except:
-        pass
+        cmd = f"rm -r {path}"
+        os.system(cmd)
+    except Exception as e:
+        if not ignore_errors:
+            raise e
 
 
 def get_extension(filepath: str):
@@ -72,3 +82,18 @@ def add_prefix_to_filename(filepath: str, prefix: str):
 def replace_extension(filepath: str, ext: str):
     filepath_no_ext = remove_extension(filepath)
     return f"{filepath_no_ext}.{ext}"
+
+
+def is_image(filepath: str):
+    try:
+        from PIL import Image
+
+        img = Image.open(filepath)
+        return img.format.lower() in ["jpeg", "jpg", "png", "tiff", "gif"]
+    except:
+        return False
+
+
+def is_video(filepath: str):
+    ext = get_extension(filepath)
+    return ext.lower() in ["jpeg", "jpg", "png", "tiff", "gif"]
