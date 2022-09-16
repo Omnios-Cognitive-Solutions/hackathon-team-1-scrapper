@@ -1,0 +1,8 @@
+boto3==1.22.7
+botocore==1.25.7
+pandas==1.4.3
+PyMySQL==1.0.2 # Remove if MySql is not used
+pytest==7.1.2
+python-dotenv==0.20.0
+SQLAlchemy==1.4.36
+

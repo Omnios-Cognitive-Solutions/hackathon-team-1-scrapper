@@ -1,0 +1,23 @@
+FROM public.ecr.aws/lambda/python:3.9
+
+# Define working directory
+ARG WORKING_DIR=${LAMBDA_TASK_ROOT}
+
+
+# Update pip
+RUN python3 -m pip install --upgrade pip
+
+# Set the working directory to the root of the project.
+WORKDIR ${WORKING_DIR}
+
+# Copy separately requirements.txt to function directory for Docker caching
+COPY ./requirements.txt ${WORKING_DIR}
+
+# Install requirements
+RUN pip3 install --no-cache-dir -r ${WORKING_DIR}/requirements.txt
+RUN pip3 install awscli
+
+# Copy the code to the function directory
+COPY . ./
+
+CMD ["main.handler"]
