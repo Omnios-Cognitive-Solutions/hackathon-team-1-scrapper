@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 
 class LinkedInScrapper:
 
-    _url = "https://www.linkedin.com/"
+    _base_url = "https://www.linkedin.com/"
 
     # Public:
     def __init__(self, headless: bool = True, proxy=None):
@@ -27,11 +27,9 @@ class LinkedInScrapper:
 
     def login(self, username: str, password: str) -> bool:
         try:
-            self._driver.get("https://www.linkedin.com/")
-
+            self._driver.get(self._base_url)
             elem = self._driver.find_element(By.XPATH, "/html/body/nav/div/a[2]")
             elem.click()
-
             elem = self._driver.find_element(By.ID, "username")
             elem.send_keys(username)
             elem = self._driver.find_element(By.ID, "password")
@@ -40,7 +38,6 @@ class LinkedInScrapper:
                 By.XPATH, "/html/body/div/main/div[3]/div[1]/form/div[3]/button"
             )
             elem.click()
-
         except Exception as e:
             self._logger.error(e, exc_info=True)
             return False
